@@ -1,4 +1,4 @@
-const compId = 'MalaysiaCubeChampionship2022';
+const compId = 'Euro2022';
 const compName = "Singapore Championship 2023"
 const countryIso2 = "MY";
 
@@ -12,7 +12,7 @@ const defaultEventSqeunce = [
 
 
 wcifLink =  "https://www.worldcubeassociation.org/api/v0/competitions/" + compId + "/wcif/public"; 
-wcifLink = 'mcc2022.json';
+// wcifLink = 'mcc2022.json';
 
 var eventIdToRounds = new Map();
 let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
