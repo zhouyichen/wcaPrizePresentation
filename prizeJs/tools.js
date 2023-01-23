@@ -53,7 +53,7 @@ const rankToAward = {
     1: "Champion",
 }
 
-var resultsHeader = ["Rank", "Country", "Name", "Format"];
+var resultsHeader = ["Place", "Country", "Name", "Format"];
 const formatIndex = 3;
 
 function renderSlides(slides) {

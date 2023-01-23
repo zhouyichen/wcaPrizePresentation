@@ -63,7 +63,7 @@ $.getJSON(wcifLink, function(data) {
                             resText = renderMBTime(resTime);
                         }
                         slide['results'].push([
-                            rankToAward[rank], countryName + countryFlag,
+                            rankToAward[rank],  countryFlag + ' ' + countryName,
                             person.name, resText
                         ]);
                     }
