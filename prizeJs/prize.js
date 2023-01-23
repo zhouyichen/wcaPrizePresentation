@@ -16,6 +16,11 @@ wcifLink = 'mcc2022.json';
 
 var eventIdToRounds = new Map();
 let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
+function getFlag(countryCode) {
+    const htmllink = ' <img style="vertical-align:middle;display:inline;" height=40 src="https://purecatamphetamine.github.io/country-flag-icons/3x2/' 
+        + countryCode + '.svg"/>';
+    return htmllink;
+}
 
 $.getJSON(wcifLink, function(data) {
     events = data.events;
@@ -48,7 +53,9 @@ $.getJSON(wcifLink, function(data) {
                     const res = lastRound.results[r];
                     if (res['ranking'] == rank) {
                         const person = idToPerson[res.personId];
-                        const country = regionNames.of(person.countryIso2);
+                        const countryCode = person.countryIso2;
+                        const countryName = regionNames.of(countryCode);
+                        const countryFlag = getFlag(countryCode);
                         const resTime = res[format.res];
                         
                         var resText = renderTime(resTime);
@@ -56,7 +63,8 @@ $.getJSON(wcifLink, function(data) {
                             resText = renderMBTime(resTime);
                         }
                         slide['results'].push([
-                            rankToAward[rank], country, person.name, resText
+                            rankToAward[rank], countryName + countryFlag,
+                            person.name, resText
                         ]);
                     }
                 }
