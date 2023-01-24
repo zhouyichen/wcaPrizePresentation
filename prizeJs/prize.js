@@ -21,7 +21,8 @@ wcifLink = 'euro2022.json';
 var eventIdToRounds = new Map();
 let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
 function getFlag(countryCode) {
-    const htmllink = ' <img style="vertical-align:middle;display:inline;" height=40 src="https://purecatamphetamine.github.io/country-flag-icons/3x2/' 
+    const htmllink = ' <img style="vertical-align:middle;display:inline;margin:0px" height=50 \
+                       src="https://purecatamphetamine.github.io/country-flag-icons/3x2/' 
         + countryCode + '.svg"/>';
     return htmllink;
 }
