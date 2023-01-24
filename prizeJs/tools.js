@@ -59,7 +59,7 @@ const formatIndex = 3;
 function renderSlides(slides) {
 	var HTML = '';
 	for (var s in slides) {
-		slide = slides[s];
+		var slide = slides[s];
 		var slideHTML = "";
 		var titles = slide.title;
 		for (var t in titles) {
@@ -117,7 +117,7 @@ function p(content) {
 }
 
 function title(content) {
-	return htmlElement("h2", content, "title");
+	return htmlElement("h3", content, "title");
 }
 
 function img(name) {
