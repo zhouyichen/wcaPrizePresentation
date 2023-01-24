@@ -26,6 +26,14 @@ var formats = {
     }
 };
 
+const defaultEventSqeunce = [
+    '555bf', '444bf', '333mbf',
+    '333fm', '777', '666', '333bf', 'clock', 'sq1',
+    'minx', '555',
+    'skewb', '333oh', '444', 'pyram', '222',
+    '333',
+]
+
 var eventNames = {
     '333' : "3×3×3 Cube",
     '222' : '2×2×2 Cube',

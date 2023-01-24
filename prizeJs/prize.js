@@ -1,22 +1,13 @@
-const compId = 'Euro2022';
-const compName = "Singapore Championship 2023"
-// const countryIso2 = "MY";
-const targetCountryIso2 = "DK";
+const compId = 'SingaporeChampionship2023';
+let targetCountryIso2 = "SG";
 const specialCategoryName = "Singaporean Category";
 const openCategoryName = "Open Category";
 
-const defaultEventSqeunce = [
-    '555bf', '444bf', '333mbf',
-    '333fm', '777', '666', '333bf', 'clock', 'sq1',
-    'minx', '555',
-    'skewb', '333oh', '444', 'pyram', '222',
-    '333',
-]
+var wcifLink =  "https://www.worldcubeassociation.org/api/v0/competitions/" + compId + "/wcif/public"; 
 
-
-wcifLink =  "https://www.worldcubeassociation.org/api/v0/competitions/" + compId + "/wcif/public"; 
-wcifLink = 'mcc2022.json';
-wcifLink = 'euro2022.json';
+// for testing
+// wcifLink = 'euro2022.json';
+// targetCountryIso2 = "DK";
 
 var eventIdToRounds = new Map();
 let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
@@ -28,6 +19,7 @@ function getFlag(countryCode) {
 }
 
 $.getJSON(wcifLink, function(data) {
+    const compName = data.name;
     events = data.events;
     events.forEach(event => {
         eventIdToRounds[event.id] = event.rounds;
