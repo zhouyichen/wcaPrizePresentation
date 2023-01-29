@@ -6,8 +6,8 @@ const openCategoryName = "Open Category";
 var wcifLink =  "https://www.worldcubeassociation.org/api/v0/competitions/" + compId + "/wcif/public"; 
 
 // for testing
-// wcifLink = 'euro2022.json';
-// targetCountryIso2 = "DK";
+wcifLink = 'euro2022.json';
+targetCountryIso2 = "DK";
 
 var eventIdToRounds = new Map();
 let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
@@ -18,8 +18,25 @@ function getFlag(countryCode) {
     return htmllink;
 }
 
+
+
 $.getJSON(wcifLink, function(data) {
     const compName = data.name;
+
+    const firstSlides = [
+        {
+            title : [compName],
+            contents : [
+                "This competition is brought to you by:<br>" +
+                img('imgs/nus_mathsoc', 200) +  img('imgs/WCALogo3D', 200)
+                
+            ]
+        },
+    ]
+
+    const lastSlides = [
+    ]
+
     events = data.events;
     events.forEach(event => {
         eventIdToRounds[event.id] = event.rounds;
@@ -129,7 +146,7 @@ $.getJSON(wcifLink, function(data) {
         }
     });
     
-    renderSlides(slides);
+    renderSlides(firstSlides, slides, lastSlides);
 });
 
 

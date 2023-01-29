@@ -64,23 +64,55 @@ const rankToAward = {
 var resultsHeader = ["Place", "Citizen of", "Name", "Format"];
 const formatIndex = 3;
 
-function renderSlides(slides) {
+function renderSlides(firstSlides, awardSlides, lastSlides) {
+    var HTML = '';
+    HTML += renderNonAwardSlides(firstSlides);
+
+    for (var s in awardSlides) {
+        var slide = awardSlides[s];
+        var slideHTML = "";
+        var titles = slide.title;
+        for (var t in titles) {
+            slideHTML += title(titles[t]);
+        }
+        slideHTML += renderResults(slide.results, slide.format);
+        HTML += sec(slideHTML);
+    }
+    HTML += renderNonAwardSlides(lastSlides);
+
+    $("#slides").html(HTML);
+}
+
+function renderNonAwardSlides(slides) {
 	var HTML = '';
 	for (var s in slides) {
-		var slide = slides[s];
+		slide = slides[s];
 		var slideHTML = "";
 		var titles = slide.title;
 		for (var t in titles) {
 			slideHTML += title(titles[t]);
 		}
-		slideHTML += renderResults(slide.results, slide.format);
+		slideHTML += renderContents(slide.contents);
 		HTML += sec(slideHTML);
 	}
-	$("#slides").html(HTML);
+    return HTML;
+}
+
+
+function renderFirstSlides(slides) {
+    var htmlText = '';
+    
+
+    return htmlText
+}
+
+function renderLastSlides(slides) {
+    var htmlText = '';
+    return htmlText
 }
 
 function renderResults(results, format) {
-	var slideHTML = "";
+    var slideHTML = "";
     resultsHeader[formatIndex] = format;
     const headerRow = tableElements(resultsHeader);
     var tableHead = htmlElement('tr', headerRow);
@@ -95,66 +127,80 @@ function renderResults(results, format) {
     tableBody = htmlElement('tbody', tableBody);
     
     slideHTML = htmlElement('table', slideHTML+tableBody);
-	return slideHTML;
+    return slideHTML;
 }
 
 function htmlElement(tag, content, className) {
-	var html = "<" + tag;
-	if (className) {
-		html += " class='" + className + "'";
-	}
-	html += '>' + content + "</" + tag + '>';
-	return html
+    var html = "<" + tag;
+    if (className) {
+        html += " class='" + className + "'";
+    }
+    html += '>' + content + "</" + tag + '>';
+    return html
 }
 
 function sec(content) {
-	return htmlElement("section", content);
+    return htmlElement("section", content);
 }
 
 function tableElements(elements) {
-	var html = "";
+    var html = "";
     for (var e in elements) {
         html += '<td>' + elements[e] + '</td>';
     }
     return html;
 }
 
+function renderContents(contents) {
+    var slideHTML = "";
+    for (var c in contents) {
+        if (c == 0) {
+            slideHTML += htmlElement('p', contents[c]);
+        } else {
+            slideHTML += p(contents[c]);
+        }
+    }
+    return slideHTML;
+}
 
 function p(content) {
-	return htmlElement("p", content, "fragment");
+    return htmlElement("p", content, "fragment");
 }
 
 function title(content) {
-	return htmlElement("h3", content, "title");
+    return htmlElement("h3", content, "title");
 }
 
-function img(name) {
-	return "<br><img src='../img/" + name + ".jpg'>"
+function img(name, height=0) {
+    if (height > 0) {
+        return "<img src='" + name + ".jpg' height=" + height + ">"
+    }
+    return "<img src='" + name + ".jpg'>"
 }
 
 function a(content, address) {
-	return "<a href='" + address +"' target='_blank'>" + content + "</a>";
+    return "<a href='" + address +"' target='_blank'>" + content + "</a>";
 }
 
 function small(content) {
-	return htmlElement('span', content, 'small');
+    return htmlElement('span', content, 'small');
 }
 
 function unorderdList(items) {
-	var html = '';
-	for (var i in items) {
-		html += htmlElement("li", items[i], "fragment small");
-	}
-	return htmlElement("ul", html);
+    var html = '';
+    for (var i in items) {
+        html += htmlElement("li", items[i], "fragment small");
+    }
+    return htmlElement("ul", html);
 }
 
 function keyword(word) {
-	return htmlElement("b", word, "keyword");
+    return htmlElement("b", word, "keyword");
 }
 
 function renderTime(time, precision=2) {
-	var text;
-	if (time) {
+    var text;
+    if (time) {
         if (time < 6000) {
             text = (time/100).toFixed(precision);
             
