@@ -6,8 +6,8 @@ const openCategoryName = "Open Category";
 var wcifLink =  "https://www.worldcubeassociation.org/api/v0/competitions/" + compId + "/wcif/public"; 
 
 // for testing
-wcifLink = 'euro2022.json';
-targetCountryIso2 = "DK";
+// wcifLink = 'euro2022.json';
+// targetCountryIso2 = "DK";
 
 var eventIdToRounds = new Map();
 let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
