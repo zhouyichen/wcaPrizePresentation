@@ -19,7 +19,6 @@ function getFlag(countryCode) {
 }
 
 
-
 $.getJSON(wcifLink, function(data) {
     const compName = data.name;
 
@@ -28,7 +27,9 @@ $.getJSON(wcifLink, function(data) {
             title : [compName],
             contents : [
                 "This competition is brought to you by:<br>" +
-                img('imgs/nus_mathsoc', 200) +  img('imgs/WCALogo3D', 200)
+                img('imgs/nus_mathsoc', 160) + "&nbsp &nbsp" +  img('imgs/WCALogo3D', 160) + 
+                "<br>This competition is sponsored by:<br>" +
+                img('imgs/moyu_logo', 150) + "&nbsp &nbsp" +  img('imgs/cubewerkz_square', 200)
                 
             ]
         },

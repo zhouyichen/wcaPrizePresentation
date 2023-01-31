@@ -173,7 +173,7 @@ function title(content) {
 
 function img(name, height=0) {
     if (height > 0) {
-        return "<img src='" + name + ".jpg' height=" + height + ">"
+        return "<img src='" + name + ".jpg' height=" + height + " style=\"vertical-align:middle\">"
     }
     return "<img src='" + name + ".jpg'>"
 }
