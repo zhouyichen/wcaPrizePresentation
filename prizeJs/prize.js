@@ -27,7 +27,7 @@ $.getJSON(wcifLink, function(data) {
             title : [compName],
             contents : [
                 "This competition is brought to you by:<br>" +
-                img('imgs/nus_mathsoc', 160) + "&nbsp &nbsp" +  img('imgs/WCALogo3D', 160) + 
+                img('imgs/nus_mathsoc', 180) + "&nbsp &nbsp" +  img('imgs/WCALogo3D', 180) + 
                 "<br>This competition is sponsored by:<br>" +
                 img('imgs/moyu_logo', 150) + "&nbsp &nbsp" +  img('imgs/cubewerkz_square', 200)
                 
@@ -35,7 +35,27 @@ $.getJSON(wcifLink, function(data) {
         },
     ]
 
+    const logosInOneRow = img('imgs/nus_mathsoc', 120) + "&nbsp" +  img('imgs/WCALogo3D', 120) + "&nbsp" + 
+                        img('imgs/moyu_logo', 120) + "&nbsp" +  img('imgs/cubewerkz_square', 160);
     const lastSlides = [
+        {
+            title : [compName],
+            contents : [
+                "Photo for all Singaporean Winners<br>" + logosInOneRow
+            ]
+        },
+        {
+            title : [compName],
+            contents : [
+                "Photo for all Winners<br>" + logosInOneRow
+            ]
+        },
+        {
+            title : [compName, "See you next year!"],
+            contents : [
+                logosInOneRow
+            ]
+        },
     ]
 
     events = data.events;
