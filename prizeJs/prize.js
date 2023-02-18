@@ -75,8 +75,7 @@ function populateWithWCIF(wcifLink) {
                 targetIds.push(person.registrantId);
             }
         });
-    
-        defaultEventSqeunce.forEach(eventId => {
+        for (eventId of defaultEventSqeunce) {
             var eventRounds = eventIdToRounds[eventId];
             
             if (eventRounds) {
@@ -123,9 +122,19 @@ function populateWithWCIF(wcifLink) {
                 slide['format'] = format.name;
                 slide['results'] = [];
                 const maxRank = Math.min(3, filteredRes.length);
+                var noRes = false;
                 for (var rank = maxRank; rank >= 1; rank--){
                     const res = filteredRes[rank - 1];
+                    if (res == null || res.ranking == null) {
+                        slide['results'] = [];
+                        slides.push(slide);
+                        noRes = true;
+                        break;
+                    }
                     fillRow(res, rank, format, slide);
+                }
+                if (noRes) {
+                    continue;
                 }
                 slides.push(slide);
     
@@ -168,7 +177,7 @@ function populateWithWCIF(wcifLink) {
                     rankToAward[rank], countryText, person.name, resText
                 ]);
             }
-        });
+        };
         
         renderSlides(firstSlides, slides, lastSlides);
     });
