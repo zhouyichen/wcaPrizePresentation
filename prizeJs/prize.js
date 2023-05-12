@@ -1,14 +1,21 @@
-let compId = 'SingaporeChampionship2023';
-let targetCountryIso2 = "SG";
+let compId = '';
+let targetCountryIso2 = "";
 // compId = 'euro2022';
 // targetCountryIso2 = "DK";
 
 const specialCategoryName = "Singaporean Category";
-const openCategoryName = "Open Category";
+let openCategoryName = "Open Category";
 
 // for testing
 // wcifLink = 'euro2022.json';
 // targetCountryIso2 = "DK";
+
+window.location.search.substr(1).split("&").forEach(function(item) {
+    if (item.split("=")[0] === 'compId') {
+        compId = item.split("=")[1];
+    }
+});
+console.log('compId:' + compId);
 
 let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
 function getFlag(countryCode) {
@@ -18,28 +25,40 @@ function getFlag(countryCode) {
     return htmllink;
 }
 
-var wcifLink =  "https://www.worldcubeassociation.org/api/v0/competitions/" + compId + "/wcif/public"; 
 
-
-function populateWithWCIF(wcifLink) {
+function populateWithWCIF(compId, targetCountryIso2="") {
+    if (!targetCountryIso2) {
+        openCategoryName = "";
+    }
+    var wcifLink =  "https://www.worldcubeassociation.org/api/v0/competitions/" + compId + "/wcif/public"; 
     $.getJSON(wcifLink, function(data) {
         const compName = data.name;
         var eventIdToRounds = new Map();
         const firstSlides = [
             {
                 title : [compName],
+                // contents : [
+                //     "This competition is brought to you by:<br>" +
+                //     img('imgs/nus_mathsoc', 180) + "&nbsp &nbsp" +  img('imgs/WCALogo3D', 180) + 
+                //     "<br>This competition is sponsored by:<br>" +
+                //     img('imgs/moyu_logo', 150) + "&nbsp &nbsp" +  img('imgs/cubewerkz_square', 200)
+                // ]
                 contents : [
                     "This competition is brought to you by:<br>" +
-                    img('imgs/nus_mathsoc', 180) + "&nbsp &nbsp" +  img('imgs/WCALogo3D', 180) + 
+                    img('imgs/WCALogo3D', 180) + 
                     "<br>This competition is sponsored by:<br>" +
-                    img('imgs/moyu_logo', 150) + "&nbsp &nbsp" +  img('imgs/cubewerkz_square', 200)
-                    
+                    // img('imgs/moyu_logo', 150) + "&nbsp &nbsp" +
+                    img('imgs/cubewerkz_square', 200)
                 ]
             },
         ]
     
-        const logosInOneRow = img('imgs/nus_mathsoc', 120) + "&nbsp" +  img('imgs/WCALogo3D', 120) + "&nbsp" + 
-                            img('imgs/moyu_logo', 120) + "&nbsp" +  img('imgs/cubewerkz_square', 160);
+        // const logosInOneRow = img('imgs/nus_mathsoc', 120) + "&nbsp" +  img('imgs/WCALogo3D', 120) + "&nbsp" + 
+        //                     img('imgs/moyu_logo', 120) + "&nbsp" +  img('imgs/cubewerkz_square', 160);
+        const logosInOneRow = img('imgs/WCALogo3D', 120) + "&nbsp" + 
+                             img('imgs/moyu_logo', 120) + "&nbsp" + 
+                             img('imgs/cubewerkz_square', 160);
+                             
         const lastSlides = [
             {
                 title : [compName],
@@ -79,66 +98,70 @@ function populateWithWCIF(wcifLink) {
             var eventRounds = eventIdToRounds[eventId];
             
             if (eventRounds) {
-                num_rounds = eventRounds.length;
+                const num_rounds = eventRounds.length;
                 const lastRound = eventRounds[num_rounds-1];
                 const format = formats[lastRound.format];
-                var slide = {};
-                var filteredRes = [];
-                var includedTopPlayers = [];
-                for (var r in lastRound.results) {
-                    const res = lastRound.results[r];
-                    if (targetIds.includes(res.personId)) {
-                        const resTime = res[format.res];
-                        if (resTime < 0) {
-                            continue;
-                        }
-                        filteredRes.push(res);
-                        includedTopPlayers.push(res.personId);
-                    }
-                }
-                filteredRes.sort(function(a,b){return a['ranking'] - b['ranking']});
-                const finalLength = filteredRes.length;
-                
-                if (finalLength < 3 && num_rounds > 1) {
-                    var filteredPrevRoundRes = [];
-                    const previousRound = eventRounds[num_rounds-2];
-                    for (var r in previousRound.results) {
-                        const res = previousRound.results[r];
-                        if (targetIds.includes(res.personId) && !includedTopPlayers.includes(res.personId)) {
-                            filteredPrevRoundRes.push(res);
+
+                if (targetCountryIso2) {
+                    var slide = {};
+                    var filteredRes = [];
+                    var includedTopPlayers = [];
+                    for (var r in lastRound.results) {
+                        const res = lastRound.results[r];
+                        if (targetIds.includes(res.personId)) {
+                            const resTime = res[format.res];
+                            if (resTime < 0) {
+                                continue;
+                            }
+                            filteredRes.push(res);
+                            includedTopPlayers.push(res.personId);
                         }
                     }
-                    filteredPrevRoundRes.sort(function(a,b){return a['ranking'] - b['ranking']});
-                    for (var p = 0; p < (3 - finalLength); p++) {
-                        filteredRes.push(filteredPrevRoundRes[p]);
+                    filteredRes.sort(function(a,b){return a['ranking'] - b['ranking']});
+                    const finalLength = filteredRes.length;
+                    
+                    if (finalLength < 3 && num_rounds > 1) {
+                        var filteredPrevRoundRes = [];
+                        const previousRound = eventRounds[num_rounds-2];
+                        for (var r in previousRound.results) {
+                            const res = previousRound.results[r];
+                            if (targetIds.includes(res.personId) && !includedTopPlayers.includes(res.personId)) {
+                                filteredPrevRoundRes.push(res);
+                            }
+                        }
+                        filteredPrevRoundRes.sort(function(a,b){return a['ranking'] - b['ranking']});
+                        for (var p = 0; p < (3 - finalLength); p++) {
+                            filteredRes.push(filteredPrevRoundRes[p]);
+                        }
                     }
-                }
-    
-                slide['title'] = [
-                    compName,
-                    eventNames[eventId],
-                    specialCategoryName,
-                ];
-                slide['format'] = format.name;
-                slide['results'] = [];
-                const maxRank = Math.min(3, filteredRes.length);
-                var noRes = false;
-                for (var rank = maxRank; rank >= 1; rank--){
-                    const res = filteredRes[rank - 1];
-                    if (res == null || res.ranking == null) {
-                        slide['results'] = [];
-                        slides.push(slide);
-                        noRes = true;
-                        break;
+        
+                    slide['title'] = [
+                        compName,
+                        eventNames[eventId],
+                        specialCategoryName,
+                    ];
+                    slide['format'] = format.name;
+                    slide['results'] = [];
+                    const maxRank = Math.min(3, filteredRes.length);
+                    var noRes = false;
+                    for (var rank = maxRank; rank >= 1; rank--){
+                        const res = filteredRes[rank - 1];
+                        if (res == null || res.ranking == null) {
+                            slide['results'] = [];
+                            slides.push(slide);
+                            noRes = true;
+                            break;
+                        }
+                        fillRow(res, rank, format, slide);
                     }
-                    fillRow(res, rank, format, slide);
+                    if (noRes) {
+                        continue;
+                    }
+                    slides.push(slide);
                 }
-                if (noRes) {
-                    continue;
-                }
-                slides.push(slide);
-    
+
                 var slide = {};
+
                 // open category
                 slide['title'] = [
                     compName,
@@ -183,10 +206,10 @@ function populateWithWCIF(wcifLink) {
     });
 }
 
-populateWithWCIF(wcifLink);
+populateWithWCIF(compId, targetCountryIso2);
 
 function testSlides() {
-    var testWcifLink =  "https://www.worldcubeassociation.org/api/v0/competitions/" + "euro2022" + "/wcif/public"; 
-    targetCountryIso2 = "DK";
-    populateWithWCIF(testWcifLink);
+    // var compId = "euro2022";
+    targetCountryIso2 = "";
+    populateWithWCIF(compId, targetCountryIso2);
 }
