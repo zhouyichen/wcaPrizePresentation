@@ -6,6 +6,7 @@ let targetCountryIso2 = "";
 const specialCategoryName = "Singaporean Category";
 let openCategoryName = "Open Category";
 
+
 // for testing
 // wcifLink = 'euro2022.json';
 // targetCountryIso2 = "DK";
@@ -186,9 +187,7 @@ function populateWithWCIF(compId, targetCountryIso2="") {
     
                 const countryCode = person.countryIso2;
                 const countryName = regionNames.of(countryCode);
-                const countryFlag = getFlag(countryCode);
-                const countryText = countryFlag + ' ' + countryName;
-    
+                
                 const resTime = res[format.res];
     
                 var resText = renderTime(resTime);
@@ -196,9 +195,14 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                     resText = renderMBTime(resTime);
                 }
     
-                slide['results'].push([
-                    rankToAward[rank], countryText, person.name, resText
-                ]);
+                let tableRow = [rankToAward[rank], person.name, resText];
+                if (showCountry) {
+                    const countryFlag = getFlag(countryCode);
+                    const countryText = countryFlag + ' ' + countryName;
+                    tableRow = [rankToAward[rank], countryText, person.name, resText];
+                }
+
+                slide['results'].push(tableRow);
             }
         };
         
