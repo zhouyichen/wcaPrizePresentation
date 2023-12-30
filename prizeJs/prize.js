@@ -1,22 +1,3 @@
-let compId = '';
-let targetCountryIso2 = "";
-// compId = 'euro2022';
-// targetCountryIso2 = "DK";
-
-const specialCategoryName = "Singaporean Category";
-let openCategoryName = "Open Category";
-
-
-// for testing
-// wcifLink = 'euro2022.json';
-// targetCountryIso2 = "DK";
-
-window.location.search.substr(1).split("&").forEach(function(item) {
-    if (item.split("=")[0] === 'compId') {
-        compId = item.split("=")[1];
-    }
-});
-console.log('compId:' + compId);
 
 let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
 function getFlag(countryCode) {
@@ -38,12 +19,6 @@ function populateWithWCIF(compId, targetCountryIso2="") {
         const firstSlides = [
             {
                 title : [compName],
-                // contents : [
-                //     "This competition is brought to you by:<br>" +
-                //     img('imgs/nus_mathsoc', 180) + "&nbsp &nbsp" +  img('imgs/WCALogo3D', 180) + 
-                //     "<br>This competition is sponsored by:<br>" +
-                //     img('imgs/moyu_logo', 150) + "&nbsp &nbsp" +  img('imgs/cubewerkz_square', 200)
-                // ]
                 contents : [
                     "This competition is brought to you by:<br>" +
                     img('imgs/WCALogo3D', 180) + 
@@ -53,12 +28,19 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                 ]
             },
         ]
-    
-        // const logosInOneRow = img('imgs/nus_mathsoc', 120) + "&nbsp" +  img('imgs/WCALogo3D', 120) + "&nbsp" + 
-        //                     img('imgs/moyu_logo', 120) + "&nbsp" +  img('imgs/cubewerkz_square', 160);
-        const logosInOneRow = img('imgs/WCALogo3D', 120) + "&nbsp" + 
-                             img('imgs/moyu_logo', 120) + "&nbsp" + 
+        let logosInOneRow = img('imgs/WCALogo3D', 120) + "&nbsp" + 
                              img('imgs/cubewerkz_square', 160);
+        if (compSponsor == "Moyu") {
+            firstSlides[0].contents = [
+                "This competition is brought to you by:<br>" +
+                img('imgs/WCALogo3D', 180) + 
+                "<br>This competition is sponsored by:<br>" +
+                img('imgs/moyu_logo', 150) + "&nbsp &nbsp" +
+                img('imgs/cubewerkz_square', 200)
+            ]
+            logosInOneRow = img('imgs/moyu_logo', 120) + "&nbsp" + img('imgs/cubewerkz_square', 160)  + "&nbsp" + img('imgs/WCALogo3D', 120);
+
+        }
                              
         const lastSlides = [
             {
