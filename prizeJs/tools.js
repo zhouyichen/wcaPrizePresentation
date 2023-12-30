@@ -28,9 +28,10 @@ var formats = {
 
 const defaultEventSqeunce = [
     '555bf', '444bf', '333mbf',
-    '333fm', '777', '666', 'clock', 'sq1', '333bf', 
+    '333fm', '777', '333bf', '666', 'sq1', 
     'minx', '555',
-    'skewb', '333oh', '444', 'pyram', '222',
+    'clock',
+    'skewb', '444', 'pyram', '333oh', '222',
     '333',
 ]
 
