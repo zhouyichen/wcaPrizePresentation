@@ -94,7 +94,7 @@ function renderSlides(firstSlides, awardSlides, lastSlides) {
 function renderNonAwardSlides(slides) {
 	var HTML = '';
 	for (var s in slides) {
-		slide = slides[s];
+		var slide = slides[s];
 		var slideHTML = "";
 		var titles = slide.title;
 		for (var t in titles) {
@@ -175,15 +175,26 @@ function p(content) {
     return htmlElement("p", content, "fragment");
 }
 
+function p_noAct(content) {
+    return htmlElement("p", content);
+}
+
 function title(content) {
     return htmlElement("h3", content, "title");
 }
 
 function img(name, height=0) {
     if (height > 0) {
-        return "<img src='" + name + ".jpg' height=" + height + " style=\"vertical-align:middle\">"
+        return "<img src='"  + name + ".jpg' height=" + height + " style=\"vertical-align:middle\">"
     }
     return "<img src='" + name + ".jpg'>"
+}
+
+function svg_icon(name, height=0, commonPath='event_icons/') {
+    if (height > 0) {
+        return "<img src='" + commonPath + name + ".svg' height=" + height + " style=\"vertical-align:middle\">"
+    }
+    return "<img src='" + commonPath + name + ".svg'>"
 }
 
 function a(content, address) {
@@ -194,10 +205,10 @@ function small(content) {
     return htmlElement('span', content, 'small');
 }
 
-function unorderdList(items) {
+function unorderdList(items, className="fragment small") {
     var html = '';
     for (var i in items) {
-        html += htmlElement("li", items[i], "fragment small");
+        html += htmlElement("li", items[i], className);
     }
     return htmlElement("ul", html);
 }
