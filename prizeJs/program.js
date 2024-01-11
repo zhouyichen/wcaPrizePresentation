@@ -67,6 +67,12 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
             }
         }
 
+        var finalRounds = [];
+        for (var eventData of data.events) {
+            var finalRound = eventData.rounds[eventData.rounds.length-1];
+            finalRounds.push(finalRound.id);
+        }
+
         for (var i=0; i<flattened_acts.length-1; i++) {
             var act = flattened_acts[i];
             if (act.activityCode == 'other-checkin') {
@@ -82,7 +88,22 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
             }
             var currentInstr = "Competitors in this group should remain at the waiting area.";
             var nextInstr = ["Please submit your puzzle at the submission table before the next group starts.",
-                            "Please remain in the venue and get ready for the next group."]
+                            "Please remain in the venue and get ready for the next group."];
+            
+            const currentRound = act.activityCode.split('-').slice(0, 2).join("-");
+            const nextRound = nextAct.activityCode.split('-').slice(0, 2).join("-");
+            if (finalRounds.includes(currentRound)) {
+                currentInstr = "Competitors in this group should remain at the solving station.";
+                if ( finalRounds.includes(nextRound)) {
+                    nextInstr = ["Please submit your puzzle at the submission table before the next group starts.",
+                    "Please proceed to the waiting area after submitting your puzzle."];
+                }
+                if (nextRound == "333-r4") {
+                    nextInstr = ["Please proceed to the waiting area, do not need to submit the puzzle"];
+                }
+            }
+
+
             var nextActName = nextAct.name;
             if (nextAct.startTime.slice(0, 10) != act.startTime.slice(0, 10)) {
                 isNextCompeting = false;
