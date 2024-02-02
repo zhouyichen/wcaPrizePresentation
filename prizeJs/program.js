@@ -75,9 +75,9 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
 
         for (var i=0; i<flattened_acts.length-1; i++) {
             var act = flattened_acts[i];
-            if (act.activityCode == 'other-checkin') {
-                continue;
-            }
+            // if (act.activityCode == 'other-checkin') {
+            //     continue;
+            // }
             var nextAct = flattened_acts[i+1];
 
             var isCurrentCompeting = (!act.activityCode.includes('other'));
