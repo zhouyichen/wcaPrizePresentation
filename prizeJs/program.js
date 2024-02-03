@@ -87,9 +87,11 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                 currentEvent = act.activityCode.split('-')[0];
             }
             var currentInstr = "Competitors in this group should remain at the waiting area.";
-            var nextInstr = ["Please submit your puzzle at the submission table before the next group starts.",
-                            "Please remain in the venue and get ready for the next group."];
-            
+            var nextInstr = ["Please remain in the venue and get ready for the next group."];
+            var doubleSlides = true;
+            var nextInstr1 = ["Please submit your puzzle at the submission table before the next group starts.",
+                            "Please proceeed to the waiting area after submitting the puzzle."];
+
             const currentRound = act.activityCode.split('-').slice(0, 2).join("-");
             const nextRound = nextAct.activityCode.split('-').slice(0, 2).join("-");
             if (finalRounds.includes(currentRound)) {
@@ -101,6 +103,7 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                 if (nextRound == "333-r4") {
                     nextInstr = ["Please proceed to the waiting area, do not need to submit the puzzle"];
                 }
+                doubleSlides = false;
             }
 
 
@@ -120,6 +123,19 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                 "isNextCompeting": isNextCompeting
             }
             slides.push(slide);
+
+            if (doubleSlides) {
+                var slide = {
+                    "currentAct": act.name,
+                    "currentInstr": currentInstr,
+                    "isCurrentCompeting": isCurrentCompeting,
+                    "currentEvent": currentEvent,
+                    "nextAct": nextActName,
+                    "nextInstr": nextInstr1,
+                    "isNextCompeting": isNextCompeting
+                }
+                slides.push(slide);
+            }
         }
         const lastSlides = [];
 
