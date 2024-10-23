@@ -42,7 +42,18 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                             + "&nbsp" + img('imgs/moyu_logo_hm', 100)
                             + "&nbsp &nbsp" + img('imgs/cubewerkz_square', 210)
                             + "&nbsp" + img('imgs/WCALogo3D', 160);
+        } else if (compSponsor == "Moyu+Mofun") {
+            firstSlides[0].contents = [
+                "This competition is brought to you by:<br>" +
+                img('imgs/moyu_logo', 180) + "&nbsp &nbsp" + img('imgs/mofunland', 190, ext='.png')+
+                "<br>" +
+                img('imgs/WCA_logo', 240, ext='.png') 
+            ]
+            logosInOneRow = img('imgs/moyu_logo', 110)
+                            + "&nbsp &nbsp" + img('imgs/WCA_logo', 140, ext='.png')
+                            + "&nbsp &nbsp" + img('imgs/mofunland', 120, ext='.png');
         }
+
 
         var schedule = data.schedule
         var venue = schedule.venues[venue_idx];
@@ -71,6 +82,10 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
         for (var eventData of data.events) {
             var finalRound = eventData.rounds[eventData.rounds.length-1];
             finalRounds.push(finalRound.id);
+
+            for (var round of eventData.rounds) {
+                eventIdToRounds.set(round.id, round);
+            }
         }
 
         for (var i=0; i<flattened_acts.length-1; i++) {
@@ -106,6 +121,25 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                 doubleSlides = false;
             }
 
+            const currentRoundData = eventIdToRounds.get(currentRound);
+
+            if (currentRoundData) {
+                var cutoff = null;
+                if (currentRoundData.cutoff) {
+                    cutoff = currentRoundData.cutoff.attemptResult;
+                }
+    
+                var timeLimit = null;
+                var cumulativeTimeLimit = false;
+                if (currentRoundData.timeLimit) {
+                    if (currentRoundData.timeLimit.cumulativeRoundIds.length > 0) {
+                        cumulativeTimeLimit = true;
+                        timeLimit = currentRoundData.timeLimit.centiseconds;
+                    } else if (currentRoundData.timeLimit.centiseconds != 60000) {
+                        timeLimit = currentRoundData.timeLimit.centiseconds;
+                    }
+                }
+            }
 
             var nextActName = nextAct.name;
             if (nextAct.startTime.slice(0, 10) != act.startTime.slice(0, 10)) {
@@ -118,6 +152,9 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                 "currentInstr": currentInstr,
                 "isCurrentCompeting": isCurrentCompeting,
                 "currentEvent": currentEvent,
+                "cutoff": cutoff,
+                "timeLimit": timeLimit,
+                "cumulativeTimeLimit": cumulativeTimeLimit,
                 "nextAct": nextActName,
                 "nextInstr": nextInstr,
                 "isNextCompeting": isNextCompeting
@@ -130,6 +167,9 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                     "currentInstr": currentInstr,
                     "isCurrentCompeting": isCurrentCompeting,
                     "currentEvent": currentEvent,
+                    "cutoff": cutoff,
+                    "timeLimit": timeLimit,
+                    "cumulativeTimeLimit": cumulativeTimeLimit,
                     "nextAct": nextActName,
                     "nextInstr": nextInstr1,
                     "isNextCompeting": isNextCompeting
@@ -141,6 +181,19 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
 
         renderProgSlides(compName, firstSlides, slides, lastSlides, logosInOneRow);
     });
+}
+
+function centisecondsToTimeStr(centiseconds) {
+    var seconds = centiseconds / 100;
+    var minutes = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+    if (minutes == 0) {
+        return seconds.toFixed(0) + ' sec ';
+    }
+    if (seconds == 0) {
+        return minutes + ' min ';
+    }
+    return minutes + " min " + seconds.toFixed(0) + ' sec ';
 }
 
 function renderProgSlides(compName, firstSlides, actSlides, lastSlides, logosInOneRow) {
@@ -161,6 +214,17 @@ function renderProgSlides(compName, firstSlides, actSlides, lastSlides, logosInO
         if (slide.isCurrentCompeting) {
             contents += p_noAct(htmlElement('b', slide.currentInstr));
         }
+        if (slide.cutoff) {
+            contents += p_noAct("Cutoff time:  < " + centisecondsToTimeStr(slide.cutoff));
+        }
+        if (slide.timeLimit) {
+            var limitText = "Time limit:  < ";
+            if (slide.cumulativeTimeLimit) {
+                limitText = "Cumulative time limit: < ";
+            }
+            contents += p_noAct(limitText + centisecondsToTimeStr(slide.timeLimit));
+        }
+
         contents += logosInOneRow + '</div>';
         slideHTML += contents;
 

@@ -1,18 +1,18 @@
 let testingWith23 = true;
 testingWith23 = false;
-let compId = 'MYHMSingaporeChampionship2024';
-let compSponsor = "Moyu";
+let compId = 'CoolDownSingapore2024';
+let compSponsor = "Moyu+Mofun";
 if (testingWith23) {
-    compId = "SingaporeChampionship2023";
+    compId = "NTUWelcome2023";
 }
 
-let targetCountryIso2 = "SG";
+let targetCountryIso2 = null;
 
 console.log('compId:' + compId);
 
 const specialCategoryName = "Singaporean Category";
 let openCategoryName = "Open Category";
-let isChampionship = true;
+let isChampionship = false;
 
 $(function() {
 	var interval = 1000;

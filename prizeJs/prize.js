@@ -7,7 +7,6 @@ function getFlag(countryCode) {
     return htmllink;
 }
 
-
 function populateWithWCIF(compId, targetCountryIso2="") {
     if (!targetCountryIso2) {
         openCategoryName = "";
@@ -39,29 +38,46 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                 img('imgs/cubewerkz_square', 200)
             ]
             logosInOneRow = img('imgs/moyu_logo', 120) + "&nbsp" + img('imgs/cubewerkz_square', 160)  + "&nbsp" + img('imgs/WCALogo3D', 120);
-
+        } else if (compSponsor == "Moyu+Mofun") {
+            firstSlides[0].contents = [
+                "This competition is brought to you by:<br>" +
+                img('imgs/moyu_logo', 180) + "&nbsp &nbsp" + img('imgs/mofunland', 190, ext='.png')+
+                "<br>" +
+                img('imgs/WCA_logo', 240, ext='.png') 
+            ]
+            logosInOneRow = img('imgs/moyu_logo', 110)
+                            + "&nbsp &nbsp" + img('imgs/WCA_logo', 140, ext='.png')
+                            + "&nbsp &nbsp" + img('imgs/mofunland', 120, ext='.png');
         }
                              
-        const lastSlides = [
-            {
-                title : [compName],
-                contents : [
-                    "Photo for all Singaporean Winners<br>" + logosInOneRow
-                ]
-            },
+        const lastSlides = [];
+        if (isChampionship) {
+            lastSlides.push(
+                {
+                    title : [compName],
+                    contents : [
+                        "Photo for all Singaporean Winners<br>" + logosInOneRow
+                    ]
+                }
+            );
+
+        }
+        lastSlides.push(
             {
                 title : [compName],
                 contents : [
                     "Photo for all Winners<br>" + logosInOneRow
                 ]
-            },
+            }
+        );
+        lastSlides.push(
             {
                 title : [compName, "See you next year!"],
                 contents : [
                     logosInOneRow
                 ]
-            },
-        ]
+            }
+        );
     
         events = data.events;
         events.forEach(event => {
@@ -84,9 +100,9 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                 const num_rounds = eventRounds.length;
                 const lastRound = eventRounds[num_rounds-1];
                 const format = formats[lastRound.format];
-
+                
                 if (targetCountryIso2) {
-                    var slide = {};
+                    var slide = {'logos': logosInOneRow};
                     var filteredRes = [];
                     var includedTopPlayers = [];
                     for (var r in lastRound.results) {
@@ -143,12 +159,12 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                     slides.push(slide);
                 }
 
-                var slide = {};
+                var slide = {'logos': logosInOneRow};
 
                 // open category
                 slide['title'] = [
                     compName,
-                    eventNames[eventId],
+                    svg_icon(eventId, 80) + " " + eventNames[eventId],
                     openCategoryName,
                 ];
                 slide['format'] = format.name;

@@ -84,6 +84,9 @@ function renderSlides(firstSlides, awardSlides, lastSlides) {
             slideHTML += title(titles[t]);
         }
         slideHTML += renderResults(slide.results, slide.format);
+        if (slide.logos) {
+            slideHTML += slide.logos;
+        }
         HTML += sec(slideHTML);
     }
     HTML += renderNonAwardSlides(lastSlides);
@@ -119,7 +122,7 @@ function renderLastSlides(slides) {
     return htmlText
 }
 
-function renderResults(results, format) {
+function renderResults(results, format, logos=null) {
     var slideHTML = "";
     resultsHeader[formatIndex] = format;
     const headerRow = tableElements(resultsHeader);
@@ -135,6 +138,7 @@ function renderResults(results, format) {
     tableBody = htmlElement('tbody', tableBody);
     
     slideHTML = htmlElement('table', slideHTML+tableBody);
+
     return slideHTML;
 }
 
@@ -183,11 +187,11 @@ function title(content) {
     return htmlElement("h3", content, "title");
 }
 
-function img(name, height=0) {
+function img(name, height=0, ext='.jpg') {
     if (height > 0) {
-        return "<img src='"  + name + ".jpg' height=" + height + " style=\"vertical-align:middle\">"
+        return "<img src='"  + name + ext + "' height=" + height + " style=\"vertical-align:middle\">"
     }
-    return "<img src='" + name + ".jpg'>"
+    return "<img src='" + name + ext + "'>"
 }
 
 function svg_icon(name, height=0, commonPath='event_icons/') {
