@@ -41,12 +41,11 @@ function populateWithWCIF(compId, targetCountryIso2="") {
         } else if (compSponsor == "Moyu+Mofun") {
             firstSlides[0].contents = [
                 "This competition is brought to you by:<br>" +
-                img('imgs/moyu_logo', 180) + "&nbsp &nbsp" + img('imgs/mofunland', 190, ext='.png')+
-                "<br>" +
-                img('imgs/WCA_logo', 240, ext='.png') 
+                img('imgs/WCA_logo', 220, ext='.png')  + "&nbsp &nbsp" + img('imgs/mofunland', 180, ext='.png') +  "<br>" +
+                img('imgs/moyu_logo', 180) + "&nbsp &nbsp"  + "&nbsp &nbsp" +  img('imgs/huada', 190, ext='.png')
             ]
-            logosInOneRow = img('imgs/moyu_logo', 110)
-                            + "&nbsp &nbsp" + img('imgs/WCA_logo', 140, ext='.png')
+            logosInOneRow = img('imgs/WCA_logo', 140, ext='.png') + img('imgs/moyu_logo', 110)
+                            + "&nbsp &nbsp" + img('imgs/huada', 125, ext='.png')
                             + "&nbsp &nbsp" + img('imgs/mofunland', 120, ext='.png');
         }
                              
