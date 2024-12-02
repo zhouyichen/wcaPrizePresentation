@@ -20,24 +20,26 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                 title : [compName],
                 contents : [
                     "This competition is brought to you by:<br>" +
-                    img('imgs/WCALogo3D', 180) + 
+                    img('imgs/WCA_logo', 180, ext='.png') + 
                     "<br>This competition is sponsored by:<br>" +
                     // img('imgs/moyu_logo', 150) + "&nbsp &nbsp" +
                     img('imgs/cubewerkz_square', 200)
                 ]
             },
         ]
-        let logosInOneRow = img('imgs/WCALogo3D', 120) + "&nbsp" + 
-                             img('imgs/cubewerkz_square', 160);
+        let logosInOneRow = img('imgs/WCA_logo', 150, ext='.png') + "&nbsp" + 
+                             img('imgs/cubewerkz_square', 200);
         if (compSponsor == "Moyu") {
             firstSlides[0].contents = [
                 "This competition is brought to you by:<br>" +
-                img('imgs/WCALogo3D', 180) + 
-                "<br>This competition is sponsored by:<br>" +
-                img('imgs/moyu_logo', 150) + "&nbsp &nbsp" +
-                img('imgs/cubewerkz_square', 200)
+                img('imgs/moyu_logo', 150) + "&nbsp &nbsp" + img('imgs/moyu_logo_hm', 140)+
+                "<br>" +
+                img('imgs/cubewerkz_square', 300) + "&nbsp &nbsp" + img('imgs/WCALogo3D', 230) 
             ]
-            logosInOneRow = img('imgs/moyu_logo', 120) + "&nbsp" + img('imgs/cubewerkz_square', 160)  + "&nbsp" + img('imgs/WCALogo3D', 120);
+            logosInOneRow = img('imgs/moyu_logo', 120)
+                            + "&nbsp" + img('imgs/moyu_logo_hm', 100)
+                            + "&nbsp &nbsp" + img('imgs/cubewerkz_square', 210)
+                            + "&nbsp" + img('imgs/WCALogo3D', 160);
         } else if (compSponsor == "Moyu+Mofun") {
             firstSlides[0].contents = [
                 "This competition is brought to you by:<br>" +
@@ -48,6 +50,7 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                             + "&nbsp &nbsp" + img('imgs/huada', 125, ext='.png')
                             + "&nbsp &nbsp" + img('imgs/mofunland', 120, ext='.png');
         }
+
                              
         const lastSlides = [];
         if (isChampionship) {

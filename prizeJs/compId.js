@@ -1,6 +1,7 @@
 let compId = '';
 let targetCountryIso2 = "";
 let compSponsor = "";
+let isChampionship = false;
 window.location.search.substring(1).split("&").forEach(function(item) {
     if (item.split("=")[0] === 'compId') {
         compId = item.split("=")[1];

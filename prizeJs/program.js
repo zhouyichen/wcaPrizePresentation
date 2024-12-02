@@ -22,15 +22,15 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                 title : [compName],
                 contents : [
                     "This competition is brought to you by:<br>" +
-                    img('imgs/WCALogo3D', 180) + 
+                    img('imgs/WCA_logo', 180, ext='.png') + 
                     "<br>This competition is sponsored by:<br>" +
                     // img('imgs/moyu_logo', 150) + "&nbsp &nbsp" +
                     img('imgs/cubewerkz_square', 200)
                 ]
             },
         ]
-        let logosInOneRow = img('imgs/WCALogo3D', 120) + "&nbsp" + 
-                             img('imgs/cubewerkz_square', 160);
+        let logosInOneRow = img('imgs/WCA_logo', 150, ext='.png') + "&nbsp" + 
+                             img('imgs/cubewerkz_square', 200);
         if (compSponsor == "Moyu") {
             firstSlides[0].contents = [
                 "This competition is brought to you by:<br>" +
