@@ -214,7 +214,7 @@ function renderProgSlides(compName, firstSlides, actSlides, lastSlides, logosInO
             contents += p_noAct(htmlElement('b', slide.currentInstr));
         }
         if (slide.cutoff) {
-            contents += p_noAct("Cutoff time:  < " + centisecondsToTimeStr(slide.cutoff));
+            contents += p_noAct(htmlElement('b', "Cutoff time:  < " + centisecondsToTimeStr(slide.cutoff)));
         }
         if (slide.timeLimit) {
             var limitText = "Time limit:  < ";
