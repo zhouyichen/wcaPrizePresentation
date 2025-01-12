@@ -27,11 +27,11 @@ var formats = {
 };
 
 const defaultEventSqeunce = [
-    '555bf', '444bf', '333mbf',
-    '333fm', '777', '333bf', '666', 'sq1', 
+    '555bf', '333mbf', '444bf',
+    '333fm', '333bf', '777', '666', 'sq1', 
     'minx', '555',
     'clock',
-    'skewb', '444', 'pyram', '333oh', '222',
+    'skewb', '333oh', 'pyram', '444', '222',
     '333',
 ]
 
@@ -261,3 +261,5 @@ function renderMBTime(time) {
     const attempted = solved + missed;
     return solved + '/' + attempted + ' ' + timeText;
 }
+
+var venue_idx = 0;
