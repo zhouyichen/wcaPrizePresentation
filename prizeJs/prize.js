@@ -50,7 +50,16 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                             + "&nbsp &nbsp" + img('imgs/huada', 125, ext='.png')
                             + "&nbsp &nbsp" + img('imgs/mofunland', 120, ext='.png');
         }
-
+        else if (compSponsor == "ML+DP+GAN") {
+            firstSlides[0].contents = [
+                "This competition is brought to you by:<br>" +
+                img('imgs/WCA_logo', 220, ext='.png')  + "&nbsp &nbsp" + img('imgs/mofunland', 180, ext='.png') +  "<br>" +
+                img('imgs/GAN', 180, ext='.png') + "&nbsp &nbsp"  + "&nbsp &nbsp" +  img('imgs/dp_transparent', 150, ext='.png')
+            ]
+            logosInOneRow = img('imgs/WCA_logo', 140, ext='.png') + img('imgs/mofunland', 120, ext='.png')
+                            + "&nbsp &nbsp" + img('imgs/GAN', 120, ext='.png')
+                            + "&nbsp &nbsp" + img('imgs/dp_transparent', 100, ext='.png');
+        }
                              
         const lastSlides = [];
         if (isChampionship) {
@@ -138,7 +147,7 @@ function populateWithWCIF(compId, targetCountryIso2="") {
         
                     slide['title'] = [
                         compName,
-                        eventNames[eventId],
+                        svg_icon(eventId, 80, commonPath='../event_icons/') + " " + eventNames[eventId],
                         specialCategoryName,
                     ];
                     slide['format'] = format.name;
@@ -166,7 +175,7 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                 // open category
                 slide['title'] = [
                     compName,
-                    svg_icon(eventId, 80) + " " + eventNames[eventId],
+                    svg_icon(eventId, 80, commonPath='../event_icons/') + " " + eventNames[eventId],
                     openCategoryName,
                 ];
                 slide['format'] = format.name;
@@ -217,3 +226,28 @@ function testSlides() {
     targetCountryIso2 = "";
     populateWithWCIF(compId, targetCountryIso2);
 }
+
+$(function() {
+	var interval = 1000;
+	window.setInterval(function(){
+		$.ajax({
+			type: 'get',
+			url: 'https://gxqc1gfygd.execute-api.ap-southeast-1.amazonaws.com/production/slides/'+compId+'/get_award_state',
+			data: {},
+			success: function(data) {
+				console.log(data);
+                var state = data.state;
+				if (state != 'pending') {
+					interval = 3000;
+					if (state == 'next') {
+						Reveal.next();
+					} else {
+						Reveal.prev();
+					}
+				} else {
+					interval = 1000;
+				}
+			}
+		});
+	}, interval);
+});

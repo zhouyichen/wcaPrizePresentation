@@ -1,4 +1,5 @@
 
+
 let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
 function getFlag(countryCode) {
     const htmllink = ' <img style="vertical-align:middle;display:inline;margin:0px" height=50 \
@@ -52,7 +53,16 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                             + "&nbsp &nbsp" + img('imgs/huada', 125, ext='.png')
                             + "&nbsp &nbsp" + img('imgs/mofunland', 120, ext='.png');
         }
-
+        else if (compSponsor == "ML+DP+GAN") {
+            firstSlides[0].contents = [
+                "This competition is brought to you by:<br>" +
+                img('imgs/WCA_logo', 220, ext='.png')  + "&nbsp &nbsp" + img('imgs/mofunland', 180, ext='.png') +  "<br>" +
+                img('imgs/GAN', 180, ext='.png') + "&nbsp &nbsp"  + "&nbsp &nbsp" +  img('imgs/dp_transparent', 150, ext='.png')
+            ]
+            logosInOneRow = img('imgs/WCA_logo', 140, ext='.png') + img('imgs/mofunland', 120, ext='.png')
+                            + "&nbsp &nbsp" + img('imgs/GAN', 120, ext='.png')
+                            + "&nbsp &nbsp" + img('imgs/dp_transparent', 100, ext='.png');
+        }
 
         var schedule = data.schedule
         var venue = schedule.venues[venue_idx];
@@ -205,7 +215,7 @@ function renderProgSlides(compName, firstSlides, actSlides, lastSlides, logosInO
         var eventId = slide.currentEvent;
         var titleText = compName;
         if (eventId) {
-            titleText += " " + svg_icon(eventId, 100);
+            titleText += " " + svg_icon(eventId, 100, commonPath='../event_icons/');
         }
         slideHTML += title(titleText);
         var contents = '<div>'
@@ -245,10 +255,35 @@ function renderProgSlides(compName, firstSlides, actSlides, lastSlides, logosInO
 }
 
 
-populateWithWCIF(compId, targetCountryIso2);
+populateWithWCIF(compId, targetCountryIso2, venue_idx=venue_idx);
 
 function testSlides() {
     // var compId = "euro2022";
     targetCountryIso2 = "";
     populateWithWCIF(compId, targetCountryIso2);
 }
+
+$(function() {
+	var interval = 1000;
+	window.setInterval(function(){
+		$.ajax({
+			type: 'get',
+			url: 'https://gxqc1gfygd.execute-api.ap-southeast-1.amazonaws.com/production/slides/'+compId+'/get_prog_state',
+			data: {},
+			success: function(data) {
+				console.log(data);
+                var state = data.state;
+				if (state != 'pending') {
+					interval = 3000;
+					if (state == 'next') {
+						Reveal.next();
+					} else {
+						Reveal.prev();
+					}
+				} else {
+					interval = 1000;
+				}
+			}
+		});
+	}, interval);
+});
