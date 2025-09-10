@@ -263,3 +263,50 @@ function renderMBTime(time) {
 }
 
 var venue_idx = 0;
+
+function genLogos(firstSlides) {
+    let logosInOneRow = img('imgs/WCA_logo', 150, ext = '.png') + "&nbsp" +
+        img('imgs/cubewerkz_square', 200);
+    if (compSponsor == "Moyu") {
+        firstSlides[0].contents = [
+            "This competition is brought to you by:<br>" +
+            img('imgs/moyu_logo', 150) + "&nbsp &nbsp" + img('imgs/moyu_logo_hm', 140) +
+            "<br>" +
+            img('imgs/cubewerkz_square', 300) + "&nbsp &nbsp" + img('imgs/WCALogo3D', 230)
+        ];
+        logosInOneRow = img('imgs/moyu_logo', 120)
+            + "&nbsp" + img('imgs/moyu_logo_hm', 100)
+            + "&nbsp &nbsp" + img('imgs/cubewerkz_square', 210)
+            + "&nbsp" + img('imgs/WCALogo3D', 160);
+    } else if (compSponsor == "Moyu+Mofun") {
+        firstSlides[0].contents = [
+            "This competition is brought to you by:<br>" +
+            img('imgs/WCA_logo', 220, ext = '.png') + "&nbsp &nbsp" + img('imgs/mofunland', 180, ext = '.png') + "<br>" +
+            img('imgs/moyu_logo', 180) + "&nbsp &nbsp" + "&nbsp &nbsp" + img('imgs/huada', 190, ext = '.png')
+        ];
+        logosInOneRow = img('imgs/WCA_logo', 140, ext = '.png') + img('imgs/moyu_logo', 110)
+            + "&nbsp &nbsp" + img('imgs/huada', 125, ext = '.png')
+            + "&nbsp &nbsp" + img('imgs/mofunland', 120, ext = '.png');
+    } else if (compSponsor == "NUS+Mofun") {
+        firstSlides[0].contents = [
+            "This competition is brought to you by:<br>" +
+            img('imgs/WCA_logo', 220, ext = '.png') + "&nbsp &nbsp" + img('imgs/mofunland', 180, ext = '.png') + "<br>" +
+            img('imgs/nus_cube', 200, ext = '.jpg') + "&nbsp &nbsp" + "&nbsp &nbsp &nbsp" +
+            img('imgs/nus_mathsoc', 170, ext = '.jpg')
+        ];
+        logosInOneRow = img('imgs/WCA_logo', 140, ext = '.png') + img('imgs/mofunland', 120, ext = '.png')
+            + "&nbsp &nbsp" + img('imgs/nus_cube', 130, ext = '.jpg')
+            + "&nbsp &nbsp" + img('imgs/nus_mathsoc', 110, ext = '.jpg');
+    }
+    else if (compSponsor == "ML+DP+GAN") {
+        firstSlides[0].contents = [
+            "This competition is brought to you by:<br>" +
+            img('imgs/WCA_logo', 220, ext = '.png') + "&nbsp &nbsp" + img('imgs/mofunland', 180, ext = '.png') + "<br>" +
+            img('imgs/GAN', 180, ext = '.png') + "&nbsp &nbsp" + "&nbsp &nbsp" + img('imgs/dp_transparent', 150, ext = '.png')
+        ];
+        logosInOneRow = img('imgs/WCA_logo', 140, ext = '.png') + img('imgs/mofunland', 120, ext = '.png')
+            + "&nbsp &nbsp" + img('imgs/GAN', 120, ext = '.png')
+            + "&nbsp &nbsp" + img('imgs/dp_transparent', 100, ext = '.png');
+    }
+    return logosInOneRow;
+}
