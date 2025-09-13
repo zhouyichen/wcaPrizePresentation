@@ -184,7 +184,7 @@ function renderProgSlides(compName, firstSlides, actSlides, lastSlides, logosInO
         var eventId = slide.currentEvent;
         var titleText = compName;
         if (eventId) {
-            titleText += " " + svg_icon(eventId, 100, commonPath='../event_icons/');
+            titleText += " " + svg_icon(eventId, 100, commonPath='event_icons/');
         }
         slideHTML += title(titleText);
         var contents = '<div>'
