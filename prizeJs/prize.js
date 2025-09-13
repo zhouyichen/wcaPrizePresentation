@@ -143,7 +143,7 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                 // open category
                 slide['title'] = [
                     compName,
-                    svg_icon(eventId, 80, commonPath='../event_icons/') + " " + eventNames[eventId],
+                    svg_icon(eventId, 80, commonPath='event_icons/') + " " + eventNames[eventId],
                     openCategoryName,
                 ];
                 slide['format'] = format.name;
