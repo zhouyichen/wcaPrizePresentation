@@ -14,6 +14,11 @@ var formats = {
         attempts: 3,
         res: 'best'
     },
+    5: {
+        name: "Best of 5",
+        attempts: 5,
+        res: 'best'
+    },
     a: {
         name: "Average of 5",
         attempts: 5,
@@ -64,17 +69,25 @@ const rankToAward = {
 
 let showCountry = false;
 let formatIndex = 2;
-if (showCountry) {
-    var resultsHeader = ["Place", "Citizen of", "Name", "Format"];
-    formatIndex = 3;
-} else {
-    var resultsHeader = ["Place", "Name", "Format"];
-}
+var resultsHeader = ["Place", "Name", "Format"];
 
-
-function renderSlides(firstSlides, awardSlides, lastSlides) {
+function renderSlides(firstSlides, awardSlides, lastSlides, allRounderSlides=null) {
     var HTML = '';
     HTML += renderNonAwardSlides(firstSlides);
+
+    for (var s in allRounderSlides) {
+        var slide = allRounderSlides[s];
+        var slideHTML = "";
+        var titles = slide.title;
+        for (var t in titles) {
+            slideHTML += title(titles[t]);
+        }
+        slideHTML += renderResults(slide.results, slide.format);
+        if (slide.logos) {
+            slideHTML += slide.logos;
+        }
+        HTML += sec(slideHTML);
+    }
 
     for (var s in awardSlides) {
         var slide = awardSlides[s];
@@ -92,6 +105,8 @@ function renderSlides(firstSlides, awardSlides, lastSlides) {
     HTML += renderNonAwardSlides(lastSlides);
 
     $("#slides").html(HTML);
+    // auto load first page:
+    Reveal.next(); Reveal.prev();
 }
 
 function renderNonAwardSlides(slides) {

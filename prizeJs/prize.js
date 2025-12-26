@@ -7,12 +7,54 @@ function getFlag(countryCode) {
     return htmllink;
 }
 
+async function get_top10_from_csv(csv_url, readCountry=false) {
+    var top_10 = [];
+    if (typeof csv_url === 'string' && csv_url.startsWith('s3://')) {
+        var s3Path = csv_url.slice('s3://'.length);
+        var slashIndex = s3Path.indexOf('/');
+        var bucket = s3Path;
+        var key = '';
+        if (slashIndex !== -1) {
+            bucket = s3Path.slice(0, slashIndex);
+            key = s3Path.slice(slashIndex + 1);
+        }
+        csv_url = 'https://' + bucket + '.s3.amazonaws.com/' + key;
+    }
+    try {
+        const res = await fetch(csv_url, { method: "GET", mode: "cors" });
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+        const data = await res.text();
+        var allRows = data.split(/\r?\n|\r/);
+        for (var i = 1; i < Math.min(11, allRows.length); i++) {
+            var rowCells = allRows[i].split(',');
+            if (rowCells.length < 3) {
+                continue;
+            }
+            var personName = rowCells[2];
+            if (readCountry) {
+                var country = rowCells[3];
+                var totalPoints = rowCells[4];
+                top_10.push([i, personName, totalPoints, country]);
+            } else {
+                var totalPoints = rowCells[3];
+                top_10.push([i, personName, totalPoints]);
+            }
+        }
+        console.log(top_10);
+    } catch (err) {
+        console.error('Failed to load CSV:', csv_url, err);
+    }
+    return top_10;
+}
+
 function populateWithWCIF(compId, targetCountryIso2="") {
     if (!targetCountryIso2) {
         openCategoryName = "";
     }
     var wcifLink =  "https://www.worldcubeassociation.org/api/v0/competitions/" + compId + "/wcif/public"; 
-    $.getJSON(wcifLink, function(data) {
+    $.getJSON(wcifLink, async function(data) {
         const compName = data.name;
         var eventIdToRounds = new Map();
         const firstSlides = [
@@ -39,7 +81,6 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                     ]
                 }
             );
-
         }
         lastSlides.push(
             {
@@ -63,15 +104,16 @@ function populateWithWCIF(compId, targetCountryIso2="") {
             eventIdToRounds[event.id] = event.rounds;
         });
         var slides = [];
-    
         var idToPerson = {};
         var targetIds = [];
+        var all_rounder_slides = [];
         data.persons.forEach(person => {
             idToPerson[person.registrantId] = person;
             if (person.countryIso2 === targetCountryIso2) {
                 targetIds.push(person.registrantId);
             }
         });
+
         for (eventId of defaultEventSqeunce) {
             var eventRounds = eventIdToRounds[eventId];
             
@@ -166,24 +208,81 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                 const countryName = regionNames.of(countryCode);
                 
                 const resTime = res[format.res];
+                var personName = person.name;
     
                 var resText = renderTime(resTime);
                 if (eventId === '333mbf') {
                     resText = renderMBTime(resTime);
                 }
     
-                let tableRow = [rankToAward[rank], person.name, resText];
                 if (showCountry) {
                     const countryFlag = getFlag(countryCode);
-                    const countryText = countryFlag + ' ' + countryName;
-                    tableRow = [rankToAward[rank], countryText, person.name, resText];
+                    personName = countryFlag + ' ' + personName;
                 }
-
+                const tableRow = [rankToAward[rank], personName, resText];
                 slide['results'].push(tableRow);
             }
         };
         
-        renderSlides(firstSlides, slides, lastSlides);
+        if (isChampionship) {
+            const root_url = 'https://reg-production.s3.ap-southeast-1.amazonaws.com/stats/';
+            // const root_url = '../stats/';
+            const sg_cat_url = root_url + compId + '/sg_cat_live.csv';
+            const open_cat_url = root_url + compId + '/open_cat_live.csv';
+
+            const sg_cat_top_10 = await get_top10_from_csv(sg_cat_url);
+            const open_cat_top_10 = await get_top10_from_csv(open_cat_url, readCountry=true);
+
+            var casResults = [
+                {
+                    'categoryName': specialCategoryName,
+                    'top_10': sg_cat_top_10,
+                },
+                {
+                    'categoryName': openCategoryName,
+                    'top_10': open_cat_top_10
+                }
+            ];
+
+            for (var c in casResults) {
+                const categoryName = casResults[c].categoryName;
+                const top_10 = casResults[c].top_10;
+
+                var baseSlide = {'logos': logosInOneRow};
+                baseSlide['title'] = [
+                    compName,
+                    "All Rounder",
+                    categoryName,
+                ];
+                baseSlide['format'] = "CAS";
+                baseSlide['results'] = [];
+                // ranking 10 to 6 in one slide, then 5 to 1 in another slidd
+
+                var slide1 = JSON.parse(JSON.stringify(baseSlide));
+                var slide2 = JSON.parse(JSON.stringify(baseSlide));
+                for (var r = 10; r > 0; r--) {
+                    const i = r - 1;
+                    const row = top_10[i];
+                    const rank = row[0];
+                    var personName = row[1];
+                    const totalPoints = row[2];
+                    if (showCountry && categoryName === openCategoryName) {
+                        const countryCode = row[3];
+                        const countryFlag = getFlag(countryCode);
+                        personName = countryFlag + ' ' + personName;
+                    }
+                    var tableRow = [rank, personName, totalPoints];
+                    if (rank >= 6) {
+                        slide1['results'].push(tableRow);
+                    } else {
+                        slide2['results'].push(tableRow);
+                    }
+                }
+                all_rounder_slides.push(slide1);
+                all_rounder_slides.push(slide2);
+            }
+        }
+        renderSlides(firstSlides, slides, lastSlides, all_rounder_slides);
     });
 }
 
