@@ -1,8 +1,8 @@
-let testingWith23 = true;
-// testingWith23 = false;
+let testingWithOtherComp = true;
+testingWithOtherComp = false;
 let compId = 'SingaporeChampionship2026';
-let compSponsor = "ML+DP+GAN";
-if (testingWith23) {
+let compSponsor = "NUS+CW+YJ";
+if (testingWithOtherComp) {
     compId = "SingaporeChampionship2025";
 }
 
@@ -13,4 +13,4 @@ console.log('compId:' + compId);
 const specialCategoryName = "Singaporean Category";
 let openCategoryName = "Open Category";
 let isChampionship = true;
-venue_idx = 1;
+venue_idx = 0;

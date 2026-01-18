@@ -33,11 +33,11 @@ var formats = {
 
 const defaultEventSqeunce = [
     '555bf', '333mbf', '444bf',
-    '333fm', '333bf', '777', '666', 'sq1', 
+    '333fm', '333bf', 
+    '777', 'sq1', '666', 
     'minx', '555',
-    'clock',
-    'skewb', '333oh', 'pyram', '444', '222',
-    '333',
+    'clock', 'skewb', '333oh', 'pyram', '444',
+    '222', '333',
 ]
 
 var eventNames = {
@@ -69,11 +69,25 @@ const rankToAward = {
 
 let showCountry = false;
 let formatIndex = 2;
-var resultsHeader = ["Place", "Name", "Format"];
+var resultsHeader = ["Rank", "Name", "Format"];
 
 function renderSlides(firstSlides, awardSlides, lastSlides, allRounderSlides=null) {
     var HTML = '';
     HTML += renderNonAwardSlides(firstSlides);
+
+    for (var s in awardSlides) {
+        var slide = awardSlides[s];
+        var slideHTML = "";
+        var titles = slide.title;
+        for (var t in titles) {
+            slideHTML += title(titles[t]);
+        }
+        slideHTML += renderResults(slide.results, slide.format);
+        if (slide.logos) {
+            slideHTML += slide.logos;
+        }
+        HTML += sec(slideHTML);
+    }
 
     for (var s in allRounderSlides) {
         var slide = allRounderSlides[s];
@@ -89,19 +103,6 @@ function renderSlides(firstSlides, awardSlides, lastSlides, allRounderSlides=nul
         HTML += sec(slideHTML);
     }
 
-    for (var s in awardSlides) {
-        var slide = awardSlides[s];
-        var slideHTML = "";
-        var titles = slide.title;
-        for (var t in titles) {
-            slideHTML += title(titles[t]);
-        }
-        slideHTML += renderResults(slide.results, slide.format);
-        if (slide.logos) {
-            slideHTML += slide.logos;
-        }
-        HTML += sec(slideHTML);
-    }
     HTML += renderNonAwardSlides(lastSlides);
 
     $("#slides").html(HTML);
@@ -322,6 +323,16 @@ function genLogos(firstSlides) {
         logosInOneRow = img('imgs/WCA_logo', 140, ext = '.png') + img('imgs/mofunland', 120, ext = '.png')
             + "&nbsp &nbsp" + img('imgs/GAN', 120, ext = '.png')
             + "&nbsp &nbsp" + img('imgs/dp_transparent', 100, ext = '.png');
+    }
+    else if (compSponsor == "NUS+CW+YJ") {
+        firstSlides[0].contents = [
+            "This competition is brought to you by:<br>" +
+            img('imgs/Cubewerkz', 200, ext = '.png') + "&nbsp  &nbsp" + img('imgs/YJ', 200, ext = '.png')  + "<br>" +
+             "&nbsp &nbsp" + img('imgs/nus_cube', 210, ext = '.png') + "&nbsp  &nbsp" + img('imgs/WCA_logo', 210, ext = '.png') 
+        ];
+        logosInOneRow = img('imgs/Cubewerkz', 110, ext = '.png') + img('imgs/YJ', 110, ext = '.png')
+            + "&nbsp &nbsp" + img('imgs/nus_cube', 120, ext = '.png')
+            + "&nbsp &nbsp" + img('imgs/WCA_logo', 120, ext = '.png');
     }
     return logosInOneRow;
 }

@@ -116,7 +116,29 @@ function populateWithWCIF(compId, targetCountryIso2="") {
 
         for (eventId of defaultEventSqeunce) {
             var eventRounds = eventIdToRounds[eventId];
-            
+    
+            function fillRow(res, rank, format, slide) {
+                const person = idToPerson[res.personId];
+    
+                const countryCode = person.countryIso2;
+                const countryName = regionNames.of(countryCode);
+                
+                const resTime = res[format.res];
+                var personName = person.name;
+    
+                var resText = renderTime(resTime);
+                if (eventId === '333mbf') {
+                    resText = renderMBTime(resTime);
+                }
+    
+                if (showCountry) {
+                    const countryFlag = getFlag(countryCode);
+                    personName = countryFlag + ' ' + personName;
+                }
+                const tableRow = [rankToAward[rank], personName, resText];
+                slide['results'].push(tableRow);
+            }
+
             if (eventRounds) {
                 const num_rounds = eventRounds.length;
                 const lastRound = eventRounds[num_rounds-1];
@@ -174,10 +196,9 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                         }
                         fillRow(res, rank, format, slide);
                     }
-                    if (noRes) {
-                        continue;
+                    if (!noRes) {
+                        slides.push(slide);
                     }
-                    slides.push(slide);
                 }
 
                 var slide = {'logos': logosInOneRow};
@@ -200,28 +221,7 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                 }
                 slides.push(slide);
             }
-    
-            function fillRow(res, rank, format, slide) {
-                const person = idToPerson[res.personId];
-    
-                const countryCode = person.countryIso2;
-                const countryName = regionNames.of(countryCode);
-                
-                const resTime = res[format.res];
-                var personName = person.name;
-    
-                var resText = renderTime(resTime);
-                if (eventId === '333mbf') {
-                    resText = renderMBTime(resTime);
-                }
-    
-                if (showCountry) {
-                    const countryFlag = getFlag(countryCode);
-                    personName = countryFlag + ' ' + personName;
-                }
-                const tableRow = [rankToAward[rank], personName, resText];
-                slide['results'].push(tableRow);
-            }
+
         };
         
         if (isChampionship) {
@@ -251,7 +251,7 @@ function populateWithWCIF(compId, targetCountryIso2="") {
                 var baseSlide = {'logos': logosInOneRow};
                 baseSlide['title'] = [
                     compName,
-                    "All Rounder",
+                    "Yearly All-Rounder",
                     categoryName,
                 ];
                 baseSlide['format'] = "CAS";
