@@ -70,6 +70,7 @@ const rankToAward = {
 let showCountry = false;
 let formatIndex = 2;
 var resultsHeader = ["Rank", "Name", "Format"];
+let numStations = 8;
 
 function renderSlides(firstSlides, awardSlides, lastSlides, allRounderSlides=null) {
     var HTML = '';

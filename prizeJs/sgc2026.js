@@ -13,4 +13,5 @@ console.log('compId:' + compId);
 const specialCategoryName = "Singaporean Category";
 let openCategoryName = "Open Category";
 let isChampionship = true;
+numStations = 12;
 venue_idx = 0;

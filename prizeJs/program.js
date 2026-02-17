@@ -7,6 +7,8 @@ function getFlag(countryCode) {
         + countryCode + '.svg"/>';
     return htmllink;
 }
+const waitingAreaInstr = "Competitors should return to the waiting area after every attempt.";
+const stayAtSolvingStation = "Competitors in this group should stay at the solving station.";
 
 function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) {
     if (!targetCountryIso2) {
@@ -78,7 +80,7 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
             if (isCurrentCompeting) {
                 currentEvent = act.activityCode.split('-')[0];
             }
-            var currentInstr = "Competitors in this group should remain at the waiting area.";
+            var currentInstr = waitingAreaInstr;
             var nextInstr = ["Please remain in the venue and get ready for the next group."];
             var doubleSlides = true;
             var nextInstr1 = ["Please submit your puzzle at the submission table before the next group starts.",
@@ -87,7 +89,7 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
             const currentRound = act.activityCode.split('-').slice(0, 2).join("-");
             const nextRound = nextAct.activityCode.split('-').slice(0, 2).join("-");
             if (finalRounds.includes(currentRound)) {
-                currentInstr = "Competitors in this group should remain at the solving station.";
+                currentInstr = stayAtSolvingStation;
                 if ( finalRounds.includes(nextRound)) {
                     nextInstr = ["Please submit your puzzle at the submission table before the next group starts.",
                     "Please proceed to the waiting area after submitting your puzzle."];
@@ -99,7 +101,9 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
             }
 
             const currentRoundData = eventIdToRounds.get(currentRound);
+            var currentAct = act.name;
 
+            var onlyOneGroup = false;
             if (currentRoundData) {
                 var cutoff = null;
                 if (currentRoundData.cutoff) {
@@ -116,6 +120,43 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                         timeLimit = currentRoundData.timeLimit.centiseconds;
                     }
                 }
+                // remove group number if there is only one group
+                if (currentRoundData.extensions) {
+                    for (var ext of currentRoundData.extensions) {
+                        if (ext.id == "num_competitors_per_group") {
+                            var numCompetitorsPerGroup = ext.data.num_competitors_per_group;
+                            if (numCompetitorsPerGroup.length == 1) {
+                                currentAct = currentAct.replace(", Group 1", "");
+                                onlyOneGroup = true;
+                            }
+                        }
+                    }
+                }
+            }
+            console.log(act.name, onlyOneGroup);
+
+            if (act.extensions && isCurrentCompeting && !onlyOneGroup && !act.activityCode.includes("r1")) {
+                // extract round name, without group number
+                var groupName = act.name.split("Group")[0];
+                var groupNum = act.name.split("Group ")[1];
+                for (var ext of act.extensions) {
+                    if (ext.id == "actLinks") {
+                        var groupInfo = ""
+                        if (ext.data.is_by_ranking) {
+                            groupInfo = "Seed " + ext.data.seed_start + " ~ " + ext.data.seed_end;
+                        } else {
+                            if (groupNum == "1") {
+                                groupInfo = "Even Seeds";
+                            } else if (groupNum == "2") {
+                                groupInfo = "Odd Seeds";
+                            }
+                        }
+                        if (ext.data.num_competitors <= numStations) {
+                            currentInstr = stayAtSolvingStation;
+                        }
+                    }
+                }
+                currentAct = groupName + groupInfo;
             }
 
             var nextActName = nextAct.name;
@@ -125,7 +166,7 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
             }
 
             var slide = {
-                "currentAct": act.name,
+                "currentAct": currentAct,
                 "currentInstr": currentInstr,
                 "isCurrentCompeting": isCurrentCompeting,
                 "currentEvent": currentEvent,
@@ -140,7 +181,7 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
 
             if (doubleSlides) {
                 var slide = {
-                    "currentAct": act.name,
+                    "currentAct": currentAct,
                     "currentInstr": currentInstr,
                     "isCurrentCompeting": isCurrentCompeting,
                     "currentEvent": currentEvent,
