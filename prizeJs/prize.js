@@ -49,6 +49,21 @@ async function get_top10_from_csv(csv_url, readCountry=false) {
     return top_10;
 }
 
+async function get_metadata(json_url) {
+    var metadata = {};
+    try {
+        const res = await fetch(json_url, { method: "GET", mode: "cors" });
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+        metadata = await res.json();
+        console.log(metadata);
+    } catch (err) {
+        console.error('Failed to load JSON:', json_url, err);
+    }
+    return metadata;
+}
+
 function populateWithWCIF(compId, targetCountryIso2="") {
     if (!targetCountryIso2) {
         openCategoryName = "";
@@ -229,9 +244,13 @@ function populateWithWCIF(compId, targetCountryIso2="") {
             // const root_url = '../stats/';
             const sg_cat_url = root_url + compId + '/sg_cat_live.csv';
             const open_cat_url = root_url + compId + '/open_cat_live.csv';
+            const metadata_url = root_url + compId + '/upload_metadata.json';
 
             const sg_cat_top_10 = await get_top10_from_csv(sg_cat_url);
             const open_cat_top_10 = await get_top10_from_csv(open_cat_url, readCountry=true);
+            const metadata = await get_metadata(metadata_url);
+
+            console.log(metadata.upload_timestamp);
 
             var casResults = [
                 {
