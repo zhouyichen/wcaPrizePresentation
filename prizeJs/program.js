@@ -133,7 +133,6 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
                     }
                 }
             }
-            console.log(act.name, onlyOneGroup);
 
             if (act.extensions && isCurrentCompeting && !onlyOneGroup && !act.activityCode.includes("r1")) {
                 // extract round name, without group number
@@ -163,6 +162,11 @@ function populateWithWCIF(compId, targetCountryIso2="", venue_idx=0, roomIdx=0) 
             if (nextAct.startTime.slice(0, 10) != act.startTime.slice(0, 10)) {
                 isNextCompeting = false;
                 nextActName = "End of Day";
+            }
+
+            if (act.activityCode == "333-r4-g1") {
+                currentInstr = "Please keep silent during the attempts. <br> No flash photography!";
+                nextActName = ""
             }
 
             var slide = {
@@ -249,11 +253,12 @@ function renderProgSlides(compName, firstSlides, actSlides, lastSlides, logosInO
 
         var nextContents = '<div style=\"text-align:center\">'
         if (slide.isNextCompeting) {
-            
             nextContents += p_noAct("For competitors in the next group (" + slide.nextAct + "):");
             nextContents += unorderdList(slide.nextInstr, className=null);
         } else {
-            nextContents = '<div>' + title("Next: " + slide.nextAct);
+            if (slide.nextAct) {
+                nextContents = '<div>' + title("Next: " + slide.nextAct);
+            }
         }
         nextContents += '</div>';
         slideHTML += nextContents;
